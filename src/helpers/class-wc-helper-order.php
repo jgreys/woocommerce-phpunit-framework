@@ -2,7 +2,7 @@
 /**
  * Order helpers.
  *
- * @package WooCommerce/Tests
+ * @package WooCommerce\Tests
  */
 
 /**
@@ -116,6 +116,35 @@ class WC_Helper_Order {
 		$order->set_shipping_tax( 0 );
 		$order->set_total( 50 ); // 4 x $10 simple helper product
 		$order->save();
+
+		return $order;
+	}
+
+	/**
+	 * Helper function to create order with fees and shipping objects.
+	 *
+	 * @param int        $customer_id The ID of the customer the order is for.
+	 * @param WC_Product $product The product to add to the order.
+	 *
+	 * @return WC_Order
+	 */
+	public static function create_order_with_fees_and_shipping( $customer_id = 1, $product = null ) {
+		$order = self::create_order( $customer_id, $product );
+
+		$fee_item = new WC_Order_Item_Fee();
+		$fee_item->set_order_id( $order->get_id() );
+		$fee_item->set_name( 'Testing fees' );
+		$fee_item->set_total( 100 );
+
+		$shipping_item = new WC_Order_Item_Shipping();
+		$shipping_item->set_order_id( $order->get_id() );
+		$shipping_item->set_name( 'Flat shipping' );
+		$shipping_item->set_total( 25 );
+
+		$order->add_item( $fee_item );
+		$order->add_item( $shipping_item );
+		$order->save();
+		$order->calculate_totals( true );
 
 		return $order;
 	}
