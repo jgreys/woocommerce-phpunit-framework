@@ -1,6 +1,6 @@
 {
   "name": "jgreys/woocommerce-phpunit-framework",
-  "description": "WooCommerce PHPUnit Framework v4.0 - Compatible with WooCommerce 6.0.0 - 6.4.1",
+  "description": "WooCommerce PHPUnit Framework v5.0 - Compatible with WooCommerce 6.5.0+",
   "type": "library",
   "license": "GPL-3.0-or-later",
   "homepage": "https://github.com/jgreys/woocommerce-phpunit-framework",
@@ -35,8 +35,8 @@
     "update": "./bin/update-framework.sh"
   },
   "extra": {
-    "woocommerce-versions": "6.0.0 - 6.4.1",
-    "framework-version": "4.0",
-    "extracted-from": "6.4.1"
+    "woocommerce-versions": "6.5.0+",
+    "framework-version": "5.0",
+    "extracted-from": "9.0.0"
   }
 }
