@@ -1,0 +1,22 @@
+# Temporary files
+/tmp
+/.tmp-wc
+.changed-versions.txt
+
+# Composer
+/vendor/
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.log
