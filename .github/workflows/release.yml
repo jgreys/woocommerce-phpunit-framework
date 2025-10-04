@@ -1,0 +1,77 @@
+name: Release Version
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          MAJOR_VERSION=$(echo $VERSION | cut -d. -f1)
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "major_version=${MAJOR_VERSION}" >> $GITHUB_OUTPUT
+          echo "Releasing version: ${VERSION} (major: ${MAJOR_VERSION})"
+
+      - name: Get version metadata
+        id: metadata
+        run: |
+          if [ -f "composer.json" ]; then
+            WC_VERSIONS=$(jq -r '.extra."woocommerce-versions"' "composer.json")
+            EXTRACTED_FROM=$(jq -r '.extra."extracted-from"' "composer.json")
+            FILE_COUNT=$(find "src" -name "*.php" | wc -l)
+
+            echo "wc_versions=${WC_VERSIONS}" >> $GITHUB_OUTPUT
+            echo "extracted_from=${EXTRACTED_FROM}" >> $GITHUB_OUTPUT
+            echo "file_count=${FILE_COUNT}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Version ${{ steps.get_version.outputs.version }}"
+          body: |
+            ## WooCommerce PHPUnit Framework v${{ steps.get_version.outputs.version }}
+
+            ### Compatibility
+            - **WooCommerce versions:** ${{ steps.metadata.outputs.wc_versions }}
+            - **Extracted from:** WooCommerce ${{ steps.metadata.outputs.extracted_from }}
+            - **Framework files:** ${{ steps.metadata.outputs.file_count }}
+
+            ### Installation
+
+            ```bash
+            composer require --dev greys/woocommerce-phpunit-framework:^${{ steps.get_version.outputs.major_version }}
+            ```
+
+            ### Package Information
+            - **Package:** [greys/woocommerce-phpunit-framework](https://packagist.org/packages/greys/woocommerce-phpunit-framework)
+            - **Documentation:** [README.md](README.md)
+
+            ---
+
+            This release provides the WooCommerce PHPUnit testing framework extracted from the official WooCommerce repository.
+            It includes all test helpers, mock classes, and base test cases needed for testing WooCommerce extensions.
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify Packagist
+        run: |
+          echo "Release created. Packagist will automatically detect the new tag."
+          echo "Visit https://packagist.org/packages/greys/woocommerce-phpunit-framework to verify."
