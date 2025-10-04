@@ -16,7 +16,7 @@ Choose your framework version based on your WooCommerce version:
 
 **Installation:**
 ```bash
-composer require --dev jgreys/woocommerce-phpunit-framework:^5.0
+composer require --dev greys/woocommerce-phpunit-framework:^5.0
 ```
 
 ---

@@ -1,5 +1,5 @@
 {
-  "name": "jgreys/woocommerce-phpunit-framework",
+  "name": "greys/woocommerce-phpunit-framework",
   "description": "WooCommerce PHPUnit Framework v5.0 - Compatible with WooCommerce 6.5.0+",
   "type": "library",
   "license": "GPL-3.0-or-later",
